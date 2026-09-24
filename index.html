@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Intereng Bravo</title>
+
+<style>
+body{
+    font-family:Arial, sans-serif;
+    margin:20px;
+}
+
+h1{
+    color:#cc0000;
+}
+
+table{
+    width:100%;
+    border-collapse:collapse;
+}
+
+th,td{
+    border:1px solid #ddd;
+    padding:8px;
+}
+
+th{
+    background:#f2f2f2;
+}
+
+#pesquisa{
+    width:100%;
+    padding:10px;
+    margin-bottom:15px;
+}
+</style>
+</head>
+
+<body>
+
+<h1>Catálogo RA</h1>
+
+<input
+type="text"
+id="pesquisa"
+placeholder="Pesquisar item...">
+
+<table id="tabela"></table>
+
+<script src="https://cdn.jsdelivr.net/npm/papaparse@5.4.1/papaparse.min.js"></script.parse("catalogo.csv",{
+
+download:true,
+header:true,
+
+complete:function(resultado){
+
+const dados = resultado.data;
+
+montarTabela(dados);
+
+document
+.getElementById("pesquisa")
+.addEventListener("keyup",function(){
+
+const texto = this.value.toLowerCase();
+
+const filtrado = dados.filter(item =>
+JSON.stringify(item)
+.toLowerCase()
+.includes(texto)
+);
+
+montarTabela(filtrado);
+
+});
+
+}
+
+});
+
+function montarTabela(dados){
+
+const tabela =
+document.getElementById("tabela");
+
+if(dados.length===0){
+
+tabela.innerHTML="Nenhum resultado";
+return;
+
+}
+
+let html="<tr>";
+
+Object.keys(dados[0]).forEach(coluna=>{
+html += `<th>${coluna}</th>`;
+});
+
+html+="</tr>";
+
+dados.forEach(linha=>{
+
+html+="<tr>";
+
+Object.values(linha).forEach(valor=>{
+html += `<td>${valor}</td>`;
+});
+
+html+="</tr>";
+
+});
+
+tabela.innerHTML=html;
+
+}
+
+</script>
+
+</body>
+</html>
